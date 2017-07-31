@@ -103,10 +103,7 @@ app.get('/messages',function(req,res){
 });
 
 app.put('/comment/:id',function(req,res){
-  let comment = {
-    user:req.body.user,
-    content:req.body.content
-  }
+  
    var query={$push: {comments:{user:req.body.user,content:req.body.content} }};
    var condition={slug:req.params.id};
   Post.findOneAndUpdate(condition,query,function(err,post){
