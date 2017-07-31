@@ -75,10 +75,10 @@ app.use(passport.session());
 require('./config/passport')(passport);
 
 //users route group (from const users = require('./routes/users');)
-app.use('/users',users);
+app.use('/api/users',users);
 
 
-app.post('/post',function(req,res){
+app.post('/api/post',function(req,res){
   Post.create(req.body,function(err,posts){
       if(err)
         res.send(err);
@@ -86,7 +86,7 @@ app.post('/post',function(req,res){
   });
 });
 
-app.post('/messages',function(req,res){
+app.post('/api/messages',function(req,res){
   Message.create(req.body,function(err,messages){
       if(err)
         res.send(err);
@@ -94,7 +94,7 @@ app.post('/messages',function(req,res){
   });
 });
 
-app.get('/messages',function(req,res){
+app.get('/api/messages',function(req,res){
   Message.find().sort({"created_at":-1}).exec(function(err,messages){
       if(err)
         res.send(err);
@@ -102,7 +102,7 @@ app.get('/messages',function(req,res){
   });
 });
 
-app.put('/comment/:id',function(req,res){
+app.put('/api/comment/:id',function(req,res){
   
    var query={$push: {comments:{user:req.body.user,content:req.body.content} }};
    var condition={slug:req.params.id};
@@ -113,7 +113,7 @@ app.put('/comment/:id',function(req,res){
   });
 })
 
-app.get('/posts/popular',function(req,res){
+app.get('/api/posts/popular',function(req,res){
 
   Post.find({},{'title':true,'slug':true,'featured':true,'created_at':true,'posted_by':true}).limit(3).sort({"views":-1}).exec(function(err,posts){
       if(err)
@@ -122,7 +122,7 @@ app.get('/posts/popular',function(req,res){
   });
 });
 
-app.get('/posts/latest',function(req,res){
+app.get('/api/posts/latest',function(req,res){
 
   Post.find({},{'title':true,'slug':true,'featured':true,'created_at':true}).limit(3).sort({"created_at":-1}).exec(function(err,posts){
       if(err)
@@ -131,7 +131,7 @@ app.get('/posts/latest',function(req,res){
   });
 });
 
-app.get('/posts/slider',function(req,res){
+app.get('/api/posts/slider',function(req,res){
   Post.find({},{'title':true,'slug':true,'featured':true}).limit(5).sort({"created_at":-1,"views":1}).exec(function(err,posts){
       if(err)
         res.send(err);
@@ -139,7 +139,7 @@ app.get('/posts/slider',function(req,res){
   });
 });
 
-app.get('/posts',function(req,res){
+app.get('/api/posts',function(req,res){
   Post.find().limit(10).sort({"created_at":-1}).exec(function(err,posts){
       if(err)
         res.send(err);
@@ -147,7 +147,7 @@ app.get('/posts',function(req,res){
   });
 });
 
-app.delete('/posts/:id',(req,res)=>{
+app.delete('/api/posts/:id',(req,res)=>{
   Post.findOneAndRemove({_id:req.params.id},function(err,post){
       if(err)
         res.send(err);
@@ -156,7 +156,7 @@ app.delete('/posts/:id',(req,res)=>{
 });
 
 
-app.get('/posts/page/:page',function(req,res){
+app.get('/api/posts/page/:page',function(req,res){
   var page = parseInt(req.params.page,10);
   var limit=10;
   Post.find().skip(page > 0 ?  ((page-1)*limit) : 0).limit(limit).sort({"created_at":-1}).exec(function(err,posts){
@@ -166,7 +166,7 @@ app.get('/posts/page/:page',function(req,res){
   });
 })
 
-app.get('/posts/:id',function(req,res){
+app.get('/api/posts/:id',function(req,res){
   Post.findOne({slug:req.params.id},function(err,post){
       if(err)
         res.send(err);
@@ -174,7 +174,7 @@ app.get('/posts/:id',function(req,res){
   });
 });
 
-app.get('/cats/:name',function(req,res){
+app.get('/api/cats/:name',function(req,res){
   Post.find({category:req.params.name}).limit(8).sort({"created_at":1}).exec(function(err,posts){
       if(err)
         res.send(err);
@@ -182,7 +182,7 @@ app.get('/cats/:name',function(req,res){
   });
 });
 
-app.get('/cats/:name/:page',function(req,res){
+app.get('/api/cats/:name/:page',function(req,res){
   var page = parseInt(req.params.page,10);
   var limit=10;
   Post.find({category:req.params.name}).skip(page > 0 ?  ((page-1)*limit) : 0).limit(limit).sort({"created_at":1}).exec(function(err,posts){
@@ -192,7 +192,7 @@ app.get('/cats/:name/:page',function(req,res){
   });
 })
 
-app.put('/posts/:id',function(req,res){
+app.put('/api/posts/:id',function(req,res){
    var query={$inc: {views:1}};
    var condition={slug:req.params.id};
   Post.findOneAndUpdate(condition,query,function(err,post){
@@ -202,7 +202,7 @@ app.put('/posts/:id',function(req,res){
   });
 })
 
-app.get('/postscount',function(req,res){
+app.get('/api/postscount',function(req,res){
   Post.count(function(err,user){
      if(err)
        res.send(err);
@@ -210,7 +210,7 @@ app.get('/postscount',function(req,res){
   });
 })
 
-app.get('/postscountcat/:name',function(req,res){
+app.get('/api/postscountcat/:name',function(req,res){
   Post.count({category:req.params.name},function(err,user){
      if(err)
        res.send(err);
