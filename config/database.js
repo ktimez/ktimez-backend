@@ -1,4 +1,4 @@
 module.exports = {
-  database: 'mongodb://root:danny5900@ds133450.mlab.com:33450/ktimez',
+  database: 'mongodb://127.0.0.1:27017/danny',
   secret: 'singlepagektimezmotherfuckingcrazywebbitch'
 }

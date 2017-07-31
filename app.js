@@ -56,7 +56,7 @@ var Post = mongoose.model('Post',mongoose.Schema({
 }));
 
 var app = express();
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 
 //cors middleware
 app.use(cors());
@@ -298,9 +298,9 @@ app.put('/users/:id',function(req,res){
   });
 })*/
 
-app.get('/*',function(req,res){
+/*app.get('/*',function(req,res){
 res.sendFile(__dirname +'/public/index.html');
-});
+});*/
 
 app.listen(port,function(){
 console.log('NodeJS Server Started on '+port+' ...')
