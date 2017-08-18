@@ -122,6 +122,33 @@ app.get('/api/posts/popular',function(req,res){
   });
 });
 
+app.get('/api/posts/mobile/popular/:count',function(req,res){
+  var limit = parseInt(req.params.count);
+  Post.find({},{'title':true,'slug':true,'featured':true,'created_at':true,'posted_by':true,'views':true}).limit(limit).sort({"views":-1}).exec(function(err,posts){
+      if(err)
+        res.send(err);
+      res.json(posts);
+  });
+});
+
+app.get('/api/posts/mobile/latest/:count',function(req,res){
+  var limit = parseInt(req.params.count);
+  Post.find({},{'title':true,'slug':true,'featured':true,'created_at':true,'posted_by':true}).limit(limit).sort({"created_at":-1}).exec(function(err,posts){
+      if(err)
+        res.send(err);
+      res.json(posts);
+  });
+});
+
+app.get('/api/cats/mobile/:name/:count',function(req,res){
+  var limit = parseInt(req.params.count);
+  Post.find({category:req.params.name},{'title':true,'slug':true,'featured':true,'created_at':true,'posted_by':true}).limit(limit).sort({"created_at":1}).exec(function(err,posts){
+      if(err)
+        res.send(err);
+      res.json(posts);
+  });
+});
+
 app.get('/api/posts/latest',function(req,res){
 
   Post.find({},{'title':true,'slug':true,'featured':true,'created_at':true}).limit(3).sort({"created_at":-1}).exec(function(err,posts){
@@ -167,15 +194,19 @@ app.get('/api/posts/page/:page',function(req,res){
 })
 
 app.get('/api/posts/:id',function(req,res){
+
   Post.findOne({slug:req.params.id},function(err,post){
       if(err)
         res.send(err);
       res.json(post);
   });
+
+  
+
 });
 
 app.get('/api/cats/:name',function(req,res){
-  Post.find({category:req.params.name}).limit(8).sort({"created_at":1}).exec(function(err,posts){
+  Post.find({category:req.params.name}).limit(10).sort({"created_at":1}).exec(function(err,posts){
       if(err)
         res.send(err);
       res.json(posts);
@@ -193,6 +224,7 @@ app.get('/api/cats/:name/:page',function(req,res){
 })
 
 app.put('/api/posts/:id',function(req,res){
+  
    var query={$inc: {views:1}};
    var condition={slug:req.params.id};
   Post.findOneAndUpdate(condition,query,function(err,post){
@@ -200,6 +232,7 @@ app.put('/api/posts/:id',function(req,res){
        res.send(err);
      res.json(post);
   });
+
 })
 
 app.get('/api/postscount',function(req,res){
@@ -218,47 +251,7 @@ app.get('/api/postscountcat/:name',function(req,res){
   });
 });
 
-/*
-app.get('/users',function(req,res){
-  User.find(function(err,users){
-      if(err)
-        res.send(err);
-      res.json(users);
-  });
-});
 
-app.get('/users/:username',function(req,res){
-  User.findOne({username:req.params.username},function(err,user){
-      if(err)
-        res.send(err);
-      res.json(user);
-  });
-});
-
-app.post('/users',function(req,res){
-  
-  User.create(req.body,function(err,users){
-      if(err)
-        res.send(err);
-      res.json(users);
-  });
-});
-
-app.post('/api/upload',function(req,res){
-   var path = '';
-     upload(req, res, function (err) {
-        if (err) {
-          // An error occurred when uploading
-          console.log(err);
-          return res.status(422).send("an Error occured")
-        }  
-       // No error occured.
-        console.log(req.file.path);
-        path = req.file.path;
-        
-        return res.send("Upload Completed for "+path); 
-  });     
-});*/
 
 app.post('/api/upload', multipartyMiddleware, function(req,res){
   fs.readFile(req.files.file.path, function (err,data) {
@@ -302,3 +295,4 @@ res.sendFile(__dirname +'/public/index.html');
 app.listen(port,function(){
 console.log('NodeJS Server Started on '+port+' ...')
 })
++9

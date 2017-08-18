@@ -12,12 +12,13 @@
     "stack",
     "express"
   ],
-  "dependencies": {
+  "dependencies":{
     "bcryptjs": "*",
     "body-parser": "*",
     "connect-multiparty": "^2.0.0",
     "cors": "*",
     "express": "*",
+    "fb": "^2.0.0",
     "fs": "0.0.1-security",
     "jsonwebtoken": "*",
     "mongoose": "*",
