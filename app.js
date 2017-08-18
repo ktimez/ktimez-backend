@@ -264,11 +264,30 @@ app.post('/api/upload', multipartyMiddleware, function(req,res){
         return console.warn(err);
       }
       console.log("The file: " + req.files.file.name + " was saved to " + newpath);
+       res.json(newpath);
     });
     
     
   });
 });
+
+app.post('/api/uploads', multipartyMiddleware, function(req,res){
+  fs.readFile(req.files.file.path, function (err,data) {
+
+    // set the correct path for the file not the temporary one from the API:
+    var newpath = "public/uploads/images/" + req.files.file.name;
+ // copy the data from the req.files.file.path and paste it to file.path
+    fs.writeFile(newpath, data,function (err) {
+      if (err) {
+        return console.warn(err);
+      }
+      console.log("The file: " + req.files.file.name + " was saved to " + newpath);
+    });
+    
+    
+  });
+});
+
 
 /*
 app.put('/users/:id',function(req,res){
