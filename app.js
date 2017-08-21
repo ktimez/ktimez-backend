@@ -193,16 +193,14 @@ app.get('/api/posts/page/:page',function(req,res){
   });
 })
 
-app.get('/api/posts/:id',function(req,res){
-
-  Post.findOne({slug:req.params.id},function(err,post){
-      if(err)
-        res.send(err);
-      res.json(post);
+app.get('/api/posts/:id',function(req,res){ 
+   var query={$inc: {views:1}};
+   var condition={slug:req.params.id};
+  Post.findOneAndUpdate(condition,query,function(err,post){
+     if(err)
+       res.send(err);
+     res.json(post);
   });
-
-  
-
 });
 
 app.get('/api/cats/:name',function(req,res){
@@ -223,6 +221,7 @@ app.get('/api/cats/:name/:page',function(req,res){
   });
 })
 
+//remove this method after updating angular bcz: breaking change!
 app.put('/api/posts/:id',function(req,res){
   
    var query={$inc: {views:1}};
